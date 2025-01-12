@@ -88,11 +88,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <div class="inner-width">
             <a href="#" class="logo">Chan's Food</a>
             <div class="navbar-menu">
-                <a href="Index.html">home</a>
-                <a href="aboutus.html">about us</a>
-                <a href="contact us.html">contact us</a>
+                <a href="Index.php">home</a>
+                <a href="aboutus.php">about us</a>
+                <a href="contact us.php">contact us</a>
                 <a href="login.php">login</a>
-                <a href="Privacy policy.html">Privacy policy</a>
+                <a href="Privacy policy.php">Privacy policy</a>
             </div>
         </div>
     </nav>

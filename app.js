@@ -75,7 +75,7 @@ function addToCard(key){
     }
     reloadCard();
 
-    window.location.href = 'cartdetails.html';
+    window.location.href = 'cartdetails.php';
 }
 function reloadCard(){
     listCard.innerHTML = '';

@@ -1,6 +1,6 @@
 <?php
 // Include config file
-require_once "config.php";
+require_once "asset/php/config.php";
 
 // Check if token is provided
 if(!isset($_GET['token']) || empty($_GET['token'])) {

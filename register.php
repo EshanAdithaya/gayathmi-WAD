@@ -13,13 +13,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty(trim($_POST["email"]))){
         $email_err = "Please enter an email.";
     } else {
+        // Convert email to lowercase before processing
+        $param_email = strtolower(trim($_POST["email"]));
+        
         // Prepare a select statement
         $sql = "SELECT id FROM users WHERE email = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "s", $param_email);
-            
-            $param_email = trim($_POST["email"]);
             
             if(mysqli_stmt_execute($stmt)){
                 mysqli_stmt_store_result($stmt);
@@ -94,9 +95,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if(sendEmail($to, $subject, $message)){
                     header("location: login.php?registration=success");
                 } else {
+                    error_log("Email configuration test failed");
                     echo "Error sending verification email.";
                 }
             } else{
+                error_log("Email configuration test failed");
                 echo "Something went wrong. Please try again later.";
             }
 
@@ -122,11 +125,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <div class="inner-width">
             <a href="#" class="logo">Chan's Food</a>
             <div class="navbar-menu">
-                <a href="Index.html">home</a>
-                <a href="aboutus.html">about us</a>
-                <a href="contact us.html">contact us</a>
-                <a href="login.html">login</a>
-                <a href="Privacy policy.html">Privacy policy</a>
+                <a href="Index.php">home</a>
+                <a href="aboutus.php">about us</a>
+                <a href="contact us.php">contact us</a>
+                <a href="login.php">login</a>
+                <a href="Privacy policy.php">Privacy policy</a>
             </div>
         </div>
     </nav>
@@ -134,7 +137,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h1>Register Now</h1>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="txt_field <?php echo (!empty($email_err)) ? 'error' : ''; ?>">
-                <input type="email" name="email" value="<?php echo $email; ?>" required>
+                <input type="email" name="email" value="<?php echo $email; ?>" onInput="this.value = this.value.toLowerCase()" required>
                 <span></span>
                 <label>Email</label>
                 <?php if(!empty($email_err)){ echo '<span class="error">' . $email_err . '</span>'; } ?>
