@@ -5,12 +5,28 @@ session_start();
 require_once "asset/php/config.php";
 
 // Fetch menu categories
-$sql_categories = "SELECT * FROM menu_categories ORDER BY display_order";
+$sql_categories = "SELECT * FROM menu_categories WHERE status = 'active' ORDER BY display_order";
 $categories = mysqli_query($conn, $sql_categories);
 
-// Fetch menu items
-$sql_items = "SELECT * FROM menu_items WHERE status = 'active' ORDER BY category_id, name";
+// Store categories in an array for later use
+$category_list = array();
+while ($category = mysqli_fetch_assoc($categories)) {
+    $category_list[] = $category;
+}
+
+// Fetch menu items with their categories
+$sql_items = "SELECT mi.*, mc.name as category_name 
+              FROM menu_items mi 
+              LEFT JOIN menu_categories mc ON mi.category_id = mc.id 
+              WHERE mi.status = 'active' 
+              ORDER BY mc.display_order, mi.name";
 $items = mysqli_query($conn, $sql_items);
+
+// Store items in an array
+$menu_items = array();
+while ($item = mysqli_fetch_assoc($items)) {
+    $menu_items[] = $item;
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +40,7 @@ $items = mysqli_query($conn, $sql_items);
     <link href='http://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <style>
+        /* Keep your existing styles */
         .menu-container {
             max-width: 1200px;
             margin: 120px auto 50px;
@@ -120,6 +137,7 @@ $items = mysqli_query($conn, $sql_items);
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 15px;
+            min-height: 45px;
         }
 
         .item-actions {
@@ -144,14 +162,13 @@ $items = mysqli_query($conn, $sql_items);
             background: #c25900;
         }
 
-        .dietary-info {
-            display: flex;
-            gap: 10px;
-        }
-
-        .dietary-icon {
-            color: #666;
-            font-size: 16px;
+        .no-items {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
         /* Responsive adjustments */
@@ -172,9 +189,7 @@ $items = mysqli_query($conn, $sql_items);
 </head>
 <body>
     <!-- Navigation -->
-<?php 
-include 'navbar.php';
-?>
+    <?php include 'navbar.php'; ?>
 
     <!-- Menu Section -->
     <div class="menu-container">
@@ -186,35 +201,50 @@ include 'navbar.php';
         <!-- Category Navigation -->
         <div class="menu-nav">
             <button class="category-btn active" data-category="all">All</button>
-            <button class="category-btn" data-category="appetizers">Appetizers</button>
-            <button class="category-btn" data-category="main-course">Main Course</button>
-            <button class="category-btn" data-category="desserts">Desserts</button>
-            <button class="category-btn" data-category="beverages">Beverages</button>
+            <?php foreach ($category_list as $category): ?>
+                <button class="category-btn" data-category="<?php echo htmlspecialchars($category['id']); ?>">
+                    <?php echo htmlspecialchars($category['name']); ?>
+                </button>
+            <?php endforeach; ?>
         </div>
 
         <!-- Menu Items Grid -->
         <div class="menu-grid">
-            <!-- Sample Menu Item -->
-            <div class="menu-item" data-category="main-course">
-                <img src="image/dish1.jpg" alt="Dish Name" class="item-image">
-                <div class="item-info">
-                    <div class="item-header">
-                        <h3 class="item-name">Special Fried Rice</h3>
-                        <span class="item-price">$12.99</span>
-                    </div>
-                    <p class="item-description">
-                        Wok-fried rice with shrimp, chicken, and fresh vegetables in our special sauce.
-                    </p>
-                    <div class="item-actions">
-                        <button class="order-btn" onclick="addToCart(1)">Add to Cart</button>
-                        <div class="dietary-info">
-                            <i class="fa fa-leaf dietary-icon" title="Vegetarian Option Available"></i>
-                            <i class="fa fa-fire dietary-icon" title="Spicy"></i>
+            <?php if (empty($menu_items)): ?>
+                <div class="no-items">
+                    <h2>No menu items available</h2>
+                    <p>Please check back later for our updated menu.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach ($menu_items as $item): ?>
+                    <div class="menu-item" data-category="<?php echo htmlspecialchars($item['category_id']); ?>">
+                        <?php if ($item['image_url']): ?>
+                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>" 
+                                 alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                 class="item-image">
+                        <?php else: ?>
+                            <img src="image/default-dish.jpg" 
+                                 alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                 class="item-image">
+                        <?php endif; ?>
+                        
+                        <div class="item-info">
+                            <div class="item-header">
+                                <h3 class="item-name"><?php echo htmlspecialchars($item['name']); ?></h3>
+                                <span class="item-price">$<?php echo number_format($item['price'], 2); ?></span>
+                            </div>
+                            <p class="item-description">
+                                <?php echo htmlspecialchars($item['description'] ?? 'No description available.'); ?>
+                            </p>
+                            <div class="item-actions">
+                                <button class="order-btn" onclick="addToCart(<?php echo $item['id']; ?>)">
+                                    Add to Cart
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Add more menu items dynamically from database -->
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -245,12 +275,34 @@ include 'navbar.php';
             });
         }
 
-        // Add to Cart Function
+        // Add to Cart Function with AJAX
         function addToCart(itemId) {
-            // Check if user is logged in
             <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                // Add your cart functionality here
-                alert('Item added to cart!');
+                // Use AJAX to add item to cart
+                fetch('add_to_cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `item_id=${itemId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Item added to cart!');
+                        // Optionally update cart icon/counter
+                        if (data.cartCount) {
+                            // Update cart count in UI if you have one
+                            // document.getElementById('cart-count').textContent = data.cartCount;
+                        }
+                    } else {
+                        alert(data.message || 'Error adding item to cart');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error adding item to cart');
+                });
             <?php else: ?>
                 window.location.href = 'login.php';
             <?php endif; ?>

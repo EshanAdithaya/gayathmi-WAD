@@ -2,8 +2,8 @@
 session_start();
 
 // Check if user is logged in and is admin
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["is_admin"]) || $_SESSION["is_admin"] !== true) {
-    header("location: login.php");
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["is_admin"]) || $_SESSION["is_admin"] !== `1`) {
+    header("location: ../../../login.php");
     exit;
 }
 

@@ -154,7 +154,7 @@
                 <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                     <a href="account.php">My Account</a>
                     <a href="orders.php">Orders</a>
-                    <a href="logout.php">Sign Out</a>
+                    <a href="Dashboard/logout.php">Sign Out</a>
                 <?php else: ?>
                     <a href="login.php">Sign In</a>
                 <?php endif; ?>

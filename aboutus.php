@@ -1,6 +1,4 @@
-<?php 
-include 'navbar.php';
-?>
+<?php include 'navbar.php'; ?>
       <div class="about-section">
         <div class="inner-container">
             <h1>About Us</h1>
