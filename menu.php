@@ -172,23 +172,9 @@ $items = mysqli_query($conn, $sql_items);
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="inner-width">
-            <a href="#" class="logo">Chan's Food</a>
-            <div class="navbar-menu">
-                <a href="index.php">home</a>
-                <a href="menu.php" class="active">menu</a>
-                <a href="aboutus.php">about us</a>
-                <a href="contact us.php">contact us</a>
-                <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <a href="profile.php">my account</a>
-                    <a href="logout.php">logout</a>
-                <?php else: ?>
-                    <a href="login.php">login</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+<?php 
+include 'navbar.php';
+?>
 
     <!-- Menu Section -->
     <div class="menu-container">

@@ -219,23 +219,10 @@ $time_slots = [
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="inner-width">
-            <a href="#" class="logo">Chan's Food</a>
-            <div class="navbar-menu">
-                <a href="index.php">home</a>
-                <a href="menu.php">menu</a>
-                <a href="reservations.php" class="active">reservations</a>
-                <a href="contact us.php">contact us</a>
-                <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <a href="profile.php">my account</a>
-                    <a href="logout.php">logout</a>
-                <?php else: ?>
-                    <a href="login.php">login</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+<?php 
+include 'navbar.php';
+
+?>
 
     <div class="reservation-container">
         <div class="reservation-header">
