@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Chan's Food - Experience authentic Asian cuisine with our carefully crafted dishes and modern dining experience">
     <title>Chan's Food | Modern Asian Dining</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="asset/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,500,600,700' rel='stylesheet'>
     <link href='http://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
