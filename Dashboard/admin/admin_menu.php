@@ -2,12 +2,9 @@
 session_start();
 
 // Check if user is logged in and is admin
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["is_admin"]) || $_SESSION["is_admin"] !== true) {
-    header("location: login.php");
-    exit;
-}
+include_once 'adminSession.php';
 
-require_once "asset/php/config.php";
+require_once "../../asset/php/config.php";
 
 // Handle form submissions
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -66,6 +63,9 @@ $sql_items = "SELECT i.*, c.name as category_name
               LEFT JOIN menu_categories c ON i.category_id = c.id 
               WHERE i.status = 'active'";
 $items = mysqli_query($conn, $sql_items);
+
+
+include_once 'navbar.php';
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +74,7 @@ $items = mysqli_query($conn, $sql_items);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Management - Admin Dashboard</title>
-    <link rel="stylesheet" href="asset/css/style.css">
+    <link rel="stylesheet" href="../../asset/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <style>
@@ -188,18 +188,7 @@ $items = mysqli_query($conn, $sql_items);
 </head>
 <body>
     <!-- Admin Navigation -->
-    <nav class="navbar">
-        <div class="inner-width">
-            <a href="#" class="logo">Admin Dashboard</a>
-            <div class="navbar-menu">
-                <a href="admin_dashboard.php">Dashboard</a>
-                <a href="admin_menu.php" class="active">Menu</a>
-                <a href="admin_orders.php">Orders</a>
-                <a href="admin_users.php">Users</a>
-                <a href="logout.php">Logout</a>
-            </div>
-        </div>
-    </nav>
+
 
     <div class="admin-container">
         <div class="admin-header">

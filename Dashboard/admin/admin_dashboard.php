@@ -2,12 +2,9 @@
 session_start();
 
 // Check if user is logged in and is admin
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["is_admin"]) || $_SESSION["is_admin"] !== `1`) {
-    header("location: ../../../login.php");
-    exit;
-}
+include_once 'adminSession.php';
 
-require_once "asset/php/config.php";
+require_once "../../asset/php/config.php";
 
 // Fetch quick stats
 $stats = [
@@ -16,15 +13,16 @@ $stats = [
     'total_menu_items' => mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM menu_items WHERE status = 'active'"))['count'],
     'recent_orders' => mysqli_query($conn, "SELECT * FROM orders ORDER BY created_at DESC LIMIT 5")
 ];
-?>
 
+include_once 'navbar.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Chan's Food</title>
-    <link rel="stylesheet" href="asset/css/style.css">
+    <link rel="stylesheet" href="../../asset/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <style>
@@ -113,20 +111,7 @@ $stats = [
     </style>
 </head>
 <body>
-    <!-- Admin Navigation -->
-    <nav class="navbar">
-        <div class="inner-width">
-            <a href="#" class="logo">Admin Dashboard</a>
-            <div class="navbar-menu">
-                <a href="admin_dashboard.php" class="active">Dashboard</a>
-                <a href="admin_menu.php">Menu</a>
-                <a href="admin_orders.php">Orders</a>
-                <a href="admin_users.php">Users</a>
-                <a href="admin_settings.php">Settings</a>
-                <a href="logout.php">Logout</a>
-            </div>
-        </div>
-    </nav>
+
 
     <div class="dashboard-container">
         <h1>Dashboard Overview</h1>
