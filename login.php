@@ -4,7 +4,7 @@ session_start();
 
 // Check if user is already logged in
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: Dashboard/user/welcome.php");
+    header("location: index.php");
     exit;
 }
 
@@ -34,8 +34,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Validate credentials
     if(empty($email_err) && empty($password_err)){
-        // Changed query to use email instead of username
-        $sql = "SELECT id, email, password FROM users WHERE email = ?";
+        // Modified query to also fetch is_admin
+        $sql = "SELECT id, email, password, is_admin FROM users WHERE email = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "s", $param_email);
@@ -45,7 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 mysqli_stmt_store_result($stmt);
                 
                 if(mysqli_stmt_num_rows($stmt) == 1){
-                    mysqli_stmt_bind_result($stmt, $id, $email, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $id, $email, $hashed_password, $is_admin);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
                             // Password is correct, start a new session
@@ -54,10 +54,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["email"] = $email; // Changed to store email instead of username
+                            $_SESSION["email"] = $email;
+                            $_SESSION["is_admin"] = $is_admin;
                             
-                            // Redirect user to welcome page
-                            header("location: Dashboard/user/welcome.php");
+                            // Redirect based on user type
+                            if($is_admin == 1){
+                                header("location: Dashboard/admin/adminDashboard.php");
+                            } else {
+                                header("location: index.php");
+                            }
+                            exit;
                         } else{
                             $login_err = "Invalid email or password.";
                         }
