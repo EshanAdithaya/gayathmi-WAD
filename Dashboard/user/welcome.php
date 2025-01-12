@@ -175,7 +175,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
         <div class="action-buttons">
             <a href="reset-password.php" class="action-button primary-button">Reset Password</a>
-            <a href="logout.php" class="action-button danger-button">Sign Out</a>
+            <a href="../logout.php" class="action-button danger-button">Sign Out</a>
         </div>
 
         <div class="welcome-footer">
