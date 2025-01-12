@@ -135,7 +135,7 @@ if ($stmt = mysqli_prepare($conn, $sql)) {
             <div class="navbar-menu">
                 <a href="index.php">home</a>
                 <a href="menu.php">menu</a>
-                <a href="order.php">order</a>
+                <a href="cart.php">order</a>
                 <a href="contact us.php">contact us</a>
                 <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                     <a href="profile.php">my account</a>
@@ -183,7 +183,7 @@ if ($stmt = mysqli_prepare($conn, $sql)) {
             </div>
 
             <div class="buttons">
-                <a href="order.php" class="btn btn-primary">Place Another Order</a>
+                <a href="cart.php" class="btn btn-primary">Place Another Order</a>
                 <a href="profile.php" class="btn btn-secondary">View Order History</a>
             </div>
 

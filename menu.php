@@ -171,6 +171,23 @@ while ($item = mysqli_fetch_assoc($items)) {
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
+        .cart-link {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #de6900;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    min-width: 15px;
+    text-align: center;
+}
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .menu-container {
@@ -277,36 +294,37 @@ while ($item = mysqli_fetch_assoc($items)) {
 
         // Add to Cart Function with AJAX
         function addToCart(itemId) {
-            <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                // Use AJAX to add item to cart
-                fetch('add_to_cart.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `item_id=${itemId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Item added to cart!');
-                        // Optionally update cart icon/counter
-                        if (data.cartCount) {
-                            // Update cart count in UI if you have one
-                            // document.getElementById('cart-count').textContent = data.cartCount;
-                        }
-                    } else {
-                        alert(data.message || 'Error adding item to cart');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error adding item to cart');
-                });
-            <?php else: ?>
-                window.location.href = 'login.php';
-            <?php endif; ?>
-        }
+    <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+        fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'item_id=' + itemId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert('Item added to cart successfully!');
+                
+                // Update cart count in navbar if you have one
+                const cartCountElement = document.getElementById('cart-count');
+                if (cartCountElement) {
+                    cartCountElement.textContent = data.cartCount;
+                }
+            } else {
+                alert(data.message || 'Error adding item to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding item to cart');
+        });
+    <?php else: ?>
+        window.location.href = 'login.php';
+    <?php endif; ?>
+}
     </script>
 </body>
 </html>

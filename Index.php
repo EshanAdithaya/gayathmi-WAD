@@ -43,7 +43,7 @@ include_once 'navbar.php';
         <a href="tel:+1234567890" class="action-btn" title="Call Us">
             <i class="fa fa-phone"></i>
         </a>
-        <a href="order.php" class="action-btn" title="Order Now">
+        <a href="cart.php" class="action-btn" title="Order Now">
             <i class="fa fa-shopping-cart"></i>
         </a>
         <a href="#home" class="action-btn" title="Back to Top">
